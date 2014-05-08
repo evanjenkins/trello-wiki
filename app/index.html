@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en" ng-app="wikiApp">
+<head>
+  <meta charset="utf-8">
+  <title>Wiki Generator</title>
+  <link rel="stylesheet" href="css/app.css"/>
+  <link rel="stylesheet" href="css/bootstrap.css"/>
+  <link rel="stylesheet" href="css/bootstrap-theme.min.css"/>
+</head>
+<body>
+  <!--<ul class="menu">-->
+    <!--<li><a href="#/view1">view1</a></li>-->
+    <!--<li><a href="#/view2">view2</a></li>-->
+  <!--</ul>-->
+  <div ng-controller="wikiLoginController">
+    <div ng-if="!validToken">
+      <div class="header-container">
+        <div class="container">
+          <h3 ng-if="!key || !token">It looks like you haven't given us some info.</h3>
+          <div class="highlight has-success has-feedback" ng-if="!key">
+            <p><a ng-href="https://trello.com/1/appKey/generate" target="_blank">Click Here</a> to generate your Application Key</p>
+            <form ng-submit="generateKey(key)">
+              <input type="text" ng-model="key" size="30" placeholder="Key">
+              <input class="btn-primary" type="submit" value="generate">
+            </form>
+          </div>
+          <hr>
+          <div class="highlight has-success has-feedback" ng-if="!token">
+            <p ng-if="validKey"><a ng-href="https://trello.com/1/authorize?key={{key}}&name=Trello Wiki Maker&expiration=30days&response_type=token" target="_blank">Click Here</a> to grant access and get a token.</p>
+            <form ng-if="validKey" ng-submit="generateToken(token)">
+              <input type="text" ng-model="token" size="30" placeholder="Token">
+              <input class="btn-primary" type="submit" value="generate">
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div ng-controller="wikiListController">
+    <div ng-if="trelloToken">
+      <div class="header-container">
+        <div class="container">
+          <header class="navbar navbar-static-top">
+            <h3>Now we can start.</h3>
+            <form ng-submit="generateWiki(boardId, trelloList)">
+              <select ng-change="getBoardLists(boardId)" ng-model="boardId" ng-options="board.id as board.name for board in boards"></select>
+              <select ng-change="setList(trelloList)" ng-if="lists" ng-model="trelloList" ng-options="list.id as list.name for list in lists"></select>
+              <input ng-if="trelloList" class="btn-primary" type="submit" value="generate">
+            </form>
+          </header>
+        </div>
+      </div>
+      <div class="container">
+        <span ng-if="html && cards" ng-click="changeVersion()">Show Github Markup</span>
+        <span ng-if="!html && cards" ng-click="changeVersion()">Show Full Html</span>
+        <div ng-if="!html" class="cards-container">
+          <div ng-if="cards" ng-repeat="card in cards">
+            <card-detail-github cardid="card.id"></card-detail-github>
+          </div>
+	        <textarea></textarea>
+          <div ng-if="!cards"><p class="lead">Nothing to see here.</p></div>
+        </div>
+        <div ng-if="html" class="cards-container">
+          <div ng-if="cards" ng-repeat="card in cards">
+            <card-detail cardid="card.id"></card-detail>
+          </div>
+          <div ng-if="!cards"><p class="lead">Nothing to see here.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- In production use:
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
+  -->
+  <script src="https://code.jquery.com/jquery-2.1.0.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="../bower_components/angular/angular.js"></script>
+  <script src="../bower_components/angular-route/angular-route.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular-cookies.min.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/services.js"></script>
+  <script src="js/controllers.js"></script>
+  <script src="js/filters.js"></script>
+  <script src="js/directives.js"></script>
+</body>
+</html>

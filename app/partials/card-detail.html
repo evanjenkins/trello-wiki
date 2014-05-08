@@ -1,0 +1,11 @@
+<div>
+  <div class="highlight">
+    <p class="lead">{{card.name}}</p>
+    <em>{{card.shortUrl}}</em>
+    <ul>
+      <li ng-repeat="label in card.labels"><span style="color:{{label.color}}">{{label.name}}</span></li>
+    </ul>
+    <small>{{card.desc}}</small>
+  </div>
+  <hr>
+</div>
